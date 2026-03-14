@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElektroLab — Elektronik Eğitim / Electronics Education</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #040a0f;
+    --bg2: #070e15;
+    --bg3: #0a1520;
+    --panel: #0d1e2e;
+    --border: #1a3a50;
+    --accent: #00ffe0;
+    --accent2: #00b4ff;
+    --accent3: #ff6b35;
+    --green: #00ff88;
+    --red: #ff2244;
+    --yellow: #ffd700;
+    --text: #b0cfe0;
+    --text-dim: #4a7a90;
+    --text-bright: #e8f4ff;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-display: 'Orbitron', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --glow: 0 0 10px rgba(0,255,224,0.4);
+    --glow2: 0 0 20px rgba(0,255,224,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scan line effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Animated background grid */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(0,180,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,180,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ═══════════ HEADER ═══════════ */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(4,10,15,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-shadow: var(--glow);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .logo-bracket { color: var(--accent2); opacity: 0.6; }
+
+  .logo-sub {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    display: block;
+    line-height: 1;
+  }
+
+  .lang-toggle {
+    display: flex;
+    gap: 0.3rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.3rem;
+  }
+
+  .lang-btn {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+    letter-spacing: 0.1em;
+  }
+
+  .lang-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: bold;
+  }
+
+  .status-bar {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse 2s infinite;
+    display: inline-block;
+    margin-right: 0.3rem;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ═══════════ HERO ═══════════ */
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 5rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,180,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-title span { color: var(--accent); text-shadow: var(--glow); }
+
+  .hero-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 2rem;
+    letter-spacing: 0.15em;
+  }
+
+  .hero-desc {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--text);
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: var(--glow);
+    display: block;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════ NAV TABS ═══════════ */
+  .nav-tabs-wrap {
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-tabs-wrap::-webkit-scrollbar { display: none; }
+
+  .nav-tabs {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+  }
+
+  .nav-tab {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.4rem;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .nav-tab:hover { color: var(--accent); }
+
+  .nav-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    text-shadow: var(--glow);
+  }
+
+  .nav-tab .tab-icon { margin-right: 0.4rem; }
+
+  /* ═══════════ MAIN LAYOUT ═══════════ */
+  .main-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    min-height: 70vh;
+  }
+
+  /* ═══════════ SIDEBAR ═══════════ */
+  .sidebar {
+    position: sticky;
+    top: 80px;
+    height: fit-content;
+  }
+
+  .sidebar-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    padding: 0.7rem 1rem;
+    background: rgba(0,255,224,0.05);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+
+  .tree-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+
+  .tree-item:hover {
+    background: rgba(0,255,224,0.05);
+    color: var(--text);
+    border-left-color: var(--accent2);
+  }
+
+  .tree-item.active {
+    background: rgba(0,255,224,0.08);
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+
+  .tree-indent { padding-left: 1.5rem; }
+
+  .level-badge {
+    font-size: 0.55rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .badge-easy { background: rgba(0,255,136,0.15); color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+  .badge-mid { background: rgba(255,215,0,0.15); color: var(--yellow); border: 1px solid rgba(255,215,0,0.3); }
+  .badge-hard { background: rgba(255,34,68,0.15); color: var(--red); border: 1px solid rgba(255,34,68,0.3); }
+
+  /* ═══════════ CONTENT ═══════════ */
+  .content-area {
+    min-width: 0;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ═══════════ TOPIC OVERVIEW ═══════════ */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .cat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .cat-card:hover {
+    border-color: rgba(0,255,224,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), var(--glow2);
+  }
+
+  .cat-card:hover::before { opacity: 1; }
+
+  .cat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .cat-name {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+
+  .cat-count {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .cat-levels {
+    display: flex;
+    gap: 0.3rem;
+    margin-top: 0.8rem;
+  }
+
+  .lvl-pip {
+    height: 3px;
+    flex: 1;
+    border-radius: 2px;
+  }
+
+  .lvl-pip.easy { background: var(--green); box-shadow: 0 0 4px var(--green); }
+  .lvl-pip.mid { background: var(--yellow); box-shadow: 0 0 4px var(--yellow); }
+  .lvl-pip.hard { background: var(--red); box-shadow: 0 0 4px var(--red); }
+
+  /* ═══════════ TOPIC DETAIL ═══════════ */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon { font-size: 2.5rem; }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+  }
+
+  .section-title-en {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    margin-top: 0.2rem;
+  }
+
+  .level-group {
+    margin-bottom: 2.5rem;
+  }
+
+  .level-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .level-header.easy { color: var(--green); }
+  .level-header.mid { color: var(--yellow); }
+  .level-header.hard { color: var(--red); }
+
+  .level-line {
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.2;
+  }
+
+  .topic-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .topic-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .topic-card:hover {
+    border-color: rgba(0,180,255,0.4);
+    background: var(--panel);
+    transform: translateX(3px);
+  }
+
+  .topic-title {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .topic-title-en {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.8rem;
+  }
+
+  .topic-desc {
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .topic-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.8rem;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+    background: rgba(0,180,255,0.08);
+    border: 1px solid rgba(0,180,255,0.2);
+    color: var(--accent2);
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ═══════════ DETAIL MODAL ═══════════ */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4,10,15,0.92);
+    backdrop-filter: blur(6px);
+    z-index: 5000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    width: 100%;
+    max-width: 760px;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.25s;
+    overflow: hidden;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 1.2rem;
+    background: rgba(0,255,224,0.05);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-path {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .modal-close {
+    width: 28px; height: 28px;
+    background: rgba(255,34,68,0.15);
+    border: 1px solid rgba(255,34,68,0.3);
+    color: var(--red);
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+
+  .modal-close:hover { background: rgba(255,34,68,0.3); }
+
+  .modal-body {
+    padding: 1.8rem;
+  }
+
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .modal-title-en {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-section {
+    margin-bottom: 1.4rem;
+  }
+
+  .modal-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .modal-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .modal-text {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .formula-box {
+    background: var(--bg);
+    border: 1px solid rgba(0,255,224,0.2);
+    border-left: 3px solid var(--accent);
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .warning-box {
+    background: rgba(255,34,68,0.08);
+    border: 1px solid rgba(255,34,68,0.3);
+    border-left: 3px solid var(--red);
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 0.85rem;
+    color: #ff8899;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .warning-box::before {
+    content: '⚠ ';
+    font-family: var(--font-mono);
+  }
+
+  .use-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .use-list li {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text);
+    padding: 0.25rem 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .use-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent2);
+  }
+
+  /* ═══════════ PROJECTS ═══════════ */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .project-card:hover {
+    border-color: rgba(0,255,224,0.4);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5), var(--glow2);
+    transform: translateY(-3px);
+  }
+
+  .project-header {
+    padding: 1.2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(0,255,224,0.03);
+  }
+
+  .project-icon {
+    width: 48px; height: 48px;
+    background: rgba(0,255,224,0.08);
+    border: 1px solid rgba(0,255,224,0.2);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .project-name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+  }
+
+  .project-name-en {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-top: 0.2rem;
+  }
+
+  .project-body {
+    padding: 1.2rem;
+  }
+
+  .project-desc {
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .project-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .chip-hw { background: rgba(255,107,53,0.15); border: 1px solid rgba(255,107,53,0.3); color: var(--accent3); }
+  .chip-sw { background: rgba(0,180,255,0.1); border: 1px solid rgba(0,180,255,0.25); color: var(--accent2); }
+  .chip-lvl { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.25); color: var(--yellow); }
+
+  /* ═══════════ SIGNAL TYPES ═══════════ */
+  .signal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .signal-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2rem;
+    transition: all 0.2s;
+  }
+
+  .signal-card:hover {
+    border-color: rgba(0,255,224,0.3);
+    transform: translateY(-2px);
+  }
+
+  .signal-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 900;
+    color: rgba(0,255,224,0.15);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .signal-name {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 0.3rem;
+  }
+
+  .signal-desc {
+    font-size: 0.82rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* SVG waveform preview */
+  .waveform-preview {
+    width: 100%;
+    height: 40px;
+    margin: 0.8rem 0 0.5rem;
+    border-radius: 2px;
+    overflow: visible;
+  }
+
+  /* ═══════════ TERMINAL SECTION ═══════════ */
+  .terminal-block {
+    background: #020a06;
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    background: rgba(0,255,136,0.05);
+    border-bottom: 1px solid rgba(0,255,136,0.1);
+  }
+
+  .t-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .t-dot.r { background: #ff5f57; }
+  .t-dot.y { background: #febc2e; }
+  .t-dot.g { background: #28c840; }
+
+  .terminal-title {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: rgba(0,255,136,0.5);
+    letter-spacing: 0.1em;
+    margin-left: 0.3rem;
+  }
+
+  .terminal-code {
+    padding: 1rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.8;
+    color: #88ffaa;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .t-comment { color: rgba(0,255,136,0.35); }
+  .t-keyword { color: #ff8844; }
+  .t-string { color: #88ddff; }
+  .t-number { color: #ffdd88; }
+
+  /* ═══════════ BREADCRUMB ═══════════ */
+  .breadcrumb {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .breadcrumb span { color: var(--accent); }
+
+  /* ═══════════ FOOTER ═══════════ */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    margin-top: 4rem;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--accent);
+    text-shadow: var(--glow);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  .footer-text {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+  }
+
+  /* ═══════════ SEARCH BAR ═══════════ */
+  .search-wrap {
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.8rem 1rem 0.8rem 2.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0,255,224,0.15);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    pointer-events: none;
+  }
+
+  /* ═══════════ RESPONSIVE ═══════════ */
+  @media (max-width: 900px) {
+    .main-wrap { grid-template-columns: 1fr; }
+    .sidebar { position: static; display: none; }
+    .hero-stats { gap: 1.5rem; }
+    .topic-cards { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 3rem 1rem 2rem; }
+    .main-wrap { padding: 1rem; }
+    .nav-tabs-wrap { padding: 0 1rem; }
+    .status-bar { display: none; }
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .cat-card, .topic-card, .project-card, .signal-card {
+    animation: fadeInUp 0.3s ease both;
+  }
+
+  .hidden-lang-tr[data-lang="en"],
+  .hidden-lang-en[data-lang="tr"] { display: none; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div>
+        <span class="logo-bracket">[</span> ElektroLab <span class="logo-bracket">]</span>
+        <span class="logo-sub">by Alp Burak Atalay · ALPHATECH INC.</span>
+      </div>
+    </div>
+    <div class="status-bar">
+      <span><span class="status-dot"></span><span class="tr-text">SİSTEM AKTİF</span><span class="en-text" style="display:none">SYSTEM ONLINE</span></span>
+      <span class="tr-text">7 MODÜL · 3 SEVİYE · 5 PROJE</span>
+      <span class="en-text" style="display:none">7 MODULES · 3 LEVELS · 5 PROJECTS</span>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('tr')" id="btn-tr">TR</button>
+      <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tag tr-text">// Elektronik Eğitim Platformu — v2.0</div>
+  <div class="hero-tag en-text" style="display:none">// Electronics Education Platform — v2.0</div>
+  <h1 class="hero-title">
+    <span class="tr-text">Elektroniği<br>Gerçekten <span>Öğren</span></span>
+    <span class="en-text" style="display:none">Learn Electronics<br>For <span>Real</span></span>
+  </h1>
+  <div class="hero-subtitle tr-text">ANALOG · DİJİTAL · GÜÇ · RF · MCU · ÖLÇÜM · GÜVENLİK</div>
+  <div class="hero-subtitle en-text" style="display:none">ANALOG · DIGITAL · POWER · RF · MCU · MEASUREMENT · SAFETY</div>
+  <p class="hero-desc tr-text">Temel kavramlardan uzman seviyesine kadar yapılandırılmış elektronik müfredatı. Gerçek projeler, formüller ve pratik notlarla.</p>
+  <p class="hero-desc en-text" style="display:none">Structured electronics curriculum from basics to expert level. Real projects, formulas, and practical notes.</p>
+  <div class="hero-stats">
+    <div class="stat-item"><span class="stat-num">7</span><span class="stat-label tr-text">Modül</span><span class="stat-label en-text" style="display:none">Modules</span></div>
+    <div class="stat-item"><span class="stat-num">3</span><span class="stat-label tr-text">Seviye</span><span class="stat-label en-text" style="display:none">Levels</span></div>
+    <div class="stat-item"><span class="stat-num">40+</span><span class="stat-label tr-text">Konu</span><span class="stat-label en-text" style="display:none">Topics</span></div>
+    <div class="stat-item"><span class="stat-num">5</span><span class="stat-label tr-text">Proje</span><span class="stat-label en-text" style="display:none">Projects</span></div>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs-wrap">
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('overview')">
+      <span class="tab-icon">⚡</span><span class="tr-text">Genel Bakış</span><span class="en-text" style="display:none">Overview</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('analog')">
+      <span class="tab-icon">〰</span><span class="tr-text">Analog</span><span class="en-text" style="display:none">Analog</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('digital')">
+      <span class="tab-icon">01</span><span class="tr-text">Dijital</span><span class="en-text" style="display:none">Digital</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('power')">
+      <span class="tab-icon">⚡</span><span class="tr-text">Güç</span><span class="en-text" style="display:none">Power</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('rf')">
+      <span class="tab-icon">📡</span>RF
+    </button>
+    <button class="nav-tab" onclick="showSection('mcu')">
+      <span class="tab-icon">🎚</span>MCU
+    </button>
+    <button class="nav-tab" onclick="showSection('measurement')">
+      <span class="tab-icon">📋</span><span class="tr-text">Ölçüm</span><span class="en-text" style="display:none">Measurement</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('safety')">
+      <span class="tab-icon">⛔</span><span class="tr-text">Güvenlik</span><span class="en-text" style="display:none">Safety</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('signals')">
+      <span class="tab-icon">～</span><span class="tr-text">Sinyaller</span><span class="en-text" style="display:none">Signals</span>
+    </button>
+    <button class="nav-tab" onclick="showSection('projects')">
+      <span class="tab-icon">💡</span><span class="tr-text">Projeler</span><span class="en-text" style="display:none">Projects</span>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-panel">
+      <div class="sidebar-header tr-text">// dizin</div>
+      <div class="sidebar-header en-text" style="display:none">// index</div>
+      <div class="tree-item active" onclick="showSection('overview')">⚡ <span class="tr-text">Genel Bakış</span><span class="en-text" style="display:none">Overview</span></div>
+      <div class="tree-item" onclick="showSection('analog')">〰 Analog</div>
+      <div class="tree-indent">
+        <div class="tree-item" onclick="showSection('analog')"><span class="tr-text">Temel</span><span class="en-text" style="display:none">Basic</span> <span class="level-badge badge-easy">EASY</span></div>
+        <div class="tree-item" onclick="showSection('analog')"><span class="tr-text">Gelişmiş</span><span class="en-text" style="display:none">Advanced</span> <span class="level-badge badge-mid">MID</span></div>
+        <div class="tree-item" onclick="showSection('analog')">Expert <span class="level-badge badge-hard">PRO</span></div>
+      </div>
+      <div class="tree-item" onclick="showSection('digital')">01 <span class="tr-text">Dijital</span><span class="en-text" style="display:none">Digital</span></div>
+      <div class="tree-item" onclick="showSection('power')">⚡ <span class="tr-text">Güç Elektroniği</span><span class="en-text" style="display:none">Power Electronics</span></div>
+      <div class="tree-item" onclick="showSection('rf')">📡 RF</div>
+      <div class="tree-item" onclick="showSection('mcu')">🎚 MCU</div>
+      <div class="tree-item" onclick="showSection('measurement')">📋 <span class="tr-text">Ölçüm</span><span class="en-text" style="display:none">Measurement</span></div>
+      <div class="tree-item" onclick="showSection('safety')">⛔ <span class="tr-text">Güvenlik</span><span class="en-text" style="display:none">Safety</span></div>
+      <div class="tree-item" onclick="showSection('signals')">～ <span class="tr-text">Sinyaller</span><span class="en-text" style="display:none">Signals</span></div>
+      <div class="tree-item" onclick="showSection('projects')">💡 <span class="tr-text">Projeler</span><span class="en-text" style="display:none">Projects</span></div>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="section active" id="sec-overview">
+      <div class="breadcrumb">electrolab <span>/</span> <span class="tr-text">genel-bakış</span><span class="en-text" style="display:none">overview</span></div>
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" type="text" id="search-input" placeholder="Search topics... / Konu ara..." oninput="filterCards()">
+      </div>
+      <div class="category-grid" id="cat-grid">
+        <div class="cat-card" onclick="showSection('analog')">
+          <span class="cat-icon">〰</span>
+          <div class="cat-name tr-text">Analog Elektronik</div>
+          <div class="cat-name en-text" style="display:none">Analog Electronics</div>
+          <div class="cat-count tr-text">12 konu · 3 seviye</div>
+          <div class="cat-count en-text" style="display:none">12 topics · 3 levels</div>
+          <div class="cat-levels"><div class="lvl-pip easy"></div><div class="lvl-pip mid"></div><div class="lvl-pip hard"></div></div>
+        </div>
+        <div class="cat-card" onclick="showSection('digital')">
+          <span class="cat-icon">01</span>
+          <div class="cat-name tr-text">Dijital Elektronik</div>
+          <div class="cat-name en-text" style="display:none">Digital Electronics</div>
+          <div class="cat-count tr-text">12 konu · 3 seviye</div>
+          <div class="cat-count en-text" style="display:none">12 topics · 3 levels</div>
+          <div class="cat-levels"><div class="lvl-pip easy"></div><div class="lvl-pip mid"></div><div class="lvl-pip hard"></div></div>
+        </div>
+        <div class="cat-card" onclick="showSection('power')">
+          <span class="cat-icon">⚡</span>
+          <div class="cat-name tr-text">Güç Elektroniği</div>
+          <div class="cat-name en-text" style="display:none">Power Electronics</div>
+          <div class="cat-count tr-text">11 konu · 3 seviye</div>
+          <div class="cat-count en-text" style="display:none">11 topics · 3 levels</div>
+          <div class="cat-levels"><div class="lvl-pip easy"></div><div class="lvl-pip mid"></div><div class="lvl-pip hard"></div></div>
+        </div>
+        <div class="cat-card" onclick="showSection('rf')">
+          <span class="cat-icon">📡</span>
+          <div class="cat-name">RF Elektroniği</div>
+          <div class="cat-count tr-text">9 konu · 3 seviye</div>
+          <div class="cat-count en-text" style="display:none">9 topics · 3 levels</div>
+          <div class="cat-levels"><div class="lvl-pip easy"></div><div class="lvl-pip mid"></div><div class="lvl-pip hard"></div></div>
+        </div>
+        <div class="cat-card" onclick="showSection('measurement')">
+          <span class="cat-icon">📋</span>
+          <div class="cat-name tr-text">Ölçüm Teknikleri</div>
+          <div class="cat-name en-text" style="display:none">Measurement Techniques</div>
+          <div class="cat-count tr-text">9 konu · 3 seviye</div>
+          <div class="cat-count en-text" style="display:none">9 topics · 3 levels</div>
+          <div class="cat-levels"><div class="lvl-pip easy"></div><div class="lvl-pip mid"></div><div class="lvl-pip hard"></div></div>
+        </div>
+        <div class="cat-card" onclick="showSection('safety')">
+          <span class="cat-icon">⛔</span>
+          <div class="cat-name tr-text">Güvenlik</div>
+          <div class="cat-name en-text" style="display:none">Safety</div>
+          <div class="cat-count tr-text">6 konu · 3 seviye</div>
+          <div class="cat-count en-text" style="display:none">6 topics · 3 levels</div>
+          <div class="cat-levels"><div class="lvl-pip easy"></div><div class="lvl-pip mid"></div><div class="lvl-pip hard"></div></div>
+        </div>
+        <div class="cat-card" onclick="showSection('mcu')">
+          <span class="cat-icon">🎚</span>
+          <div class="cat-name tr-text">Mikrodenetleyiciler</div>
+          <div class="cat-name en-text" style="display:none">Microcontrollers</div>
+          <div class="cat-count tr-text">10 konu · 3 seviye</div>
+          <div class="cat-count en-text" style="display:none">10 topics · 3 levels</div>
+          <div class="cat-levels"><div class="lvl-pip easy"></div><div class="lvl-pip mid"></div><div class="lvl-pip hard"></div></div>
+        </div>
+        <div class="cat-card" onclick="showSection('projects')">
+          <span class="cat-icon">💡</span>
+          <div class="cat-name tr-text">Projeler</div>
+          <div class="cat-name en-text" style="display:none">Projects</div>
+          <div class="cat-count tr-text">5 aktif proje</div>
+          <div class="cat-count en-text" style="display:none">5 active projects</div>
+          <div class="cat-levels"><div class="lvl-pip easy" style="background:var(--accent)"></div><div class="lvl-pip easy" style="background:var(--accent)"></div><div class="lvl-pip easy" style="background:var(--accent)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ANALOG ── -->
+    <div class="section" id="sec-analog">
+      <div class="breadcrumb">electrolab <span>/</span> analog</div>
+      <div class="section-header">
+        <div class="section-icon">〰</div>
+        <div>
+          <div class="section-title tr-text">Analog Elektronik</div>
+          <div class="section-title en-text" style="display:none">Analog Electronics</div>
+          <div class="section-title-en tr-text">ANALOG ELECTRONICS</div>
+          <div class="section-title-en en-text" style="display:none">ANALOJİ ELEKTRONİK</div>
+        </div>
+      </div>
+
+      <div class="level-group">
+        <div class="level-header easy">🟢 <span class="tr-text">Basit</span><span class="en-text" style="display:none">Basic</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('ohm')">
+            <div class="topic-title tr-text">Ohm Yasası</div>
+            <div class="topic-title en-text" style="display:none">Ohm's Law</div>
+            <div class="topic-title-en">OHM'S LAW / OHM YASASI</div>
+            <div class="topic-desc tr-text">Gerilim, akım ve direnç arasındaki temel ilişki. V = I·R</div>
+            <div class="topic-desc en-text" style="display:none">The fundamental relationship between voltage, current and resistance. V = I·R</div>
+            <div class="topic-tags"><span class="tag">V=IR</span><span class="tag">Güç / Power</span><span class="tag">LED</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('rc')">
+            <div class="topic-title tr-text">RC Zaman Sabiti</div>
+            <div class="topic-title en-text" style="display:none">RC Time Constant</div>
+            <div class="topic-title-en">RC TIME CONSTANT / RC ZAMAN SABİTİ</div>
+            <div class="topic-desc tr-text">τ = R·C — Kondansatörün şarj/deşarj süresini belirler.</div>
+            <div class="topic-desc en-text" style="display:none">τ = R·C — Determines capacitor charge/discharge timing.</div>
+            <div class="topic-tags"><span class="tag">τ=RC</span><span class="tag">Filtre</span><span class="tag">Delay</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('diode')">
+            <div class="topic-title tr-text">Diyot Temel Çalışma</div>
+            <div class="topic-title en-text" style="display:none">Diode Basics</div>
+            <div class="topic-title-en">DIODE / DİYOT</div>
+            <div class="topic-desc tr-text">Tek yönde iletir. Forward voltage ~0.7V (Si).</div>
+            <div class="topic-desc en-text" style="display:none">Conducts in one direction only. Forward voltage ~0.7V (Si).</div>
+            <div class="topic-tags"><span class="tag">Doğrultma</span><span class="tag">Koruma</span><span class="tag">0.7V</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('transistor')">
+            <div class="topic-title tr-text">Transistör (Anahtar)</div>
+            <div class="topic-title en-text" style="display:none">Transistor (Switch)</div>
+            <div class="topic-title-en">TRANSISTOR SWITCH / ANAHTAR MODU</div>
+            <div class="topic-desc tr-text">Küçük sinyal → büyük akım kontrolü. BJT ve MOSFET karşılaştırması.</div>
+            <div class="topic-desc en-text" style="display:none">Small signal controls large current. BJT vs MOSFET comparison.</div>
+            <div class="topic-tags"><span class="tag">BJT</span><span class="tag">MOSFET</span><span class="tag">Doyum / Saturation</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="level-group">
+        <div class="level-header mid">🟡 <span class="tr-text">Gelişmiş</span><span class="en-text" style="display:none">Advanced</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('opamp')">
+            <div class="topic-title tr-text">Op-Amp Devreleri</div>
+            <div class="topic-title en-text" style="display:none">Op-Amp Circuits</div>
+            <div class="topic-title-en">OP-AMP / OPERASYONEL AMPLIFIKATÖR</div>
+            <div class="topic-desc tr-text">Non-inverting, Inverting, Buffer. Kazanç = 1 + Rf/Rg</div>
+            <div class="topic-desc en-text" style="display:none">Non-inverting, Inverting, Buffer configurations. Gain = 1 + Rf/Rg</div>
+            <div class="topic-tags"><span class="tag">Gain</span><span class="tag">Buffer</span><span class="tag">Filtre</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('filter')">
+            <div class="topic-title tr-text">Aktif Filtre Tasarımı</div>
+            <div class="topic-title en-text" style="display:none">Active Filter Design</div>
+            <div class="topic-title-en">ACTIVE FILTER / AKTİF FİLTRE</div>
+            <div class="topic-desc tr-text">LPF, HPF, BPF. Kesim frekansı fc = 1/(2πRC)</div>
+            <div class="topic-desc en-text" style="display:none">LPF, HPF, BPF. Cutoff frequency fc = 1/(2πRC)</div>
+            <div class="topic-tags"><span class="tag">Low Pass</span><span class="tag">High Pass</span><span class="tag">Band Pass</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('bjt-mos')">
+            <div class="topic-title tr-text">BJT vs MOSFET Farkı</div>
+            <div class="topic-title en-text" style="display:none">BJT vs MOSFET Difference</div>
+            <div class="topic-title-en">BJT vs MOSFET</div>
+            <div class="topic-desc tr-text">Düşük güç analog → BJT. Güç devreleri → MOSFET avantajlı.</div>
+            <div class="topic-desc en-text" style="display:none">Low-power analog → BJT. Power circuits → MOSFET preferred.</div>
+            <div class="topic-tags"><span class="tag">Karşılaştırma</span><span class="tag">Seçim Kriteri</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="level-group">
+        <div class="level-header hard">🔴 Expert<div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('feedback')">
+            <div class="topic-title tr-text">Geri Besleme Stabilitesi</div>
+            <div class="topic-title en-text" style="display:none">Feedback Stability</div>
+            <div class="topic-title-en">FEEDBACK STABILITY / GERİ BESLEME STABİLİTESİ</div>
+            <div class="topic-desc tr-text">Faz marjı kritik. Fazla feedback → osilasyon.</div>
+            <div class="topic-desc en-text" style="display:none">Phase margin is critical. Excessive feedback leads to oscillation.</div>
+            <div class="topic-tags"><span class="tag">Faz Marjı</span><span class="tag">Osilasyon</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('noise')">
+            <div class="topic-title tr-text">Gürültü Analizi</div>
+            <div class="topic-title en-text" style="display:none">Noise Analysis</div>
+            <div class="topic-title-en">NOISE ANALYSIS / GÜRÜLTÜ ANALİZİ</div>
+            <div class="topic-desc tr-text">Thermal noise, switching noise, EMI. Decoupling ve ground ayrımı.</div>
+            <div class="topic-desc en-text" style="display:none">Thermal noise, switching noise, EMI. Decoupling and ground separation.</div>
+            <div class="topic-tags"><span class="tag">EMI</span><span class="tag">Decoupling</span><span class="tag">Ground</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('pcb-ground')">
+            <div class="topic-title tr-text">PCB Analog Ground Ayrımı</div>
+            <div class="topic-title en-text" style="display:none">PCB Analog Ground Separation</div>
+            <div class="topic-title-en">ANALOG GROUND / ANALOJİ TOPRAKLAMA</div>
+            <div class="topic-desc tr-text">Analog + dijital ground karışırsa ADC hata. Star grounding.</div>
+            <div class="topic-desc en-text" style="display:none">Mixed analog/digital ground causes ADC errors. Star grounding solution.</div>
+            <div class="topic-tags"><span class="tag">Star Ground</span><span class="tag">ADC</span><span class="tag">PCB Layout</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DIGITAL ── -->
+    <div class="section" id="sec-digital">
+      <div class="breadcrumb">electrolab <span>/</span> <span class="tr-text">dijital</span><span class="en-text" style="display:none">digital</span></div>
+      <div class="section-header">
+        <div class="section-icon">01</div>
+        <div>
+          <div class="section-title tr-text">Dijital Elektronik</div>
+          <div class="section-title en-text" style="display:none">Digital Electronics</div>
+          <div class="section-title-en">DIGITAL ELECTRONICS</div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header easy">🟢 <span class="tr-text">Basit</span><span class="en-text" style="display:none">Basic</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('binary')">
+            <div class="topic-title tr-text">0–1 Mantık (Binary Logic)</div>
+            <div class="topic-title en-text" style="display:none">0–1 Logic (Binary)</div>
+            <div class="topic-title-en">BINARY LOGIC / İKİLİ MANTIK</div>
+            <div class="topic-desc tr-text">LOW/HIGH eşik değerleri. Belirsiz bölge tehlikesi. 0–0.8V=LOW, 2V–5V=HIGH (5V sistem).</div>
+            <div class="topic-desc en-text" style="display:none">LOW/HIGH threshold values. Undefined region danger. 0–0.8V=LOW, 2V–5V=HIGH (5V system).</div>
+            <div class="topic-tags"><span class="tag">TTL</span><span class="tag">Eşik</span><span class="tag">GPIO</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('pullup')">
+            <div class="topic-title tr-text">Pull-up / Pull-down</div>
+            <div class="topic-title en-text" style="display:none">Pull-up / Pull-down</div>
+            <div class="topic-title-en">PULL-UP / PULL-DOWN RESISTORS</div>
+            <div class="topic-desc tr-text">Floating pin = saçma sonuçlar. Pini Vcc veya GND'ye sabitle.</div>
+            <div class="topic-desc en-text" style="display:none">Floating pin = garbage values. Fix pin to Vcc or GND via resistor.</div>
+            <div class="topic-tags"><span class="tag">Floating</span><span class="tag">Buton</span><span class="tag">Arduino</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('flipflop')">
+            <div class="topic-title tr-text">Flip-Flop Mantığı</div>
+            <div class="topic-title en-text" style="display:none">Flip-Flop Logic</div>
+            <div class="topic-title-en">FLIP-FLOP LOGIC</div>
+            <div class="topic-desc tr-text">1 bitlik hafıza. SR Flip-Flop en basit. Sayaç, durum makineleri için temel.</div>
+            <div class="topic-desc en-text" style="display:none">1-bit memory unit. SR Flip-Flop is simplest. Foundation for counters and state machines.</div>
+            <div class="topic-tags"><span class="tag">SR</span><span class="tag">Hafıza</span><span class="tag">Sayaç</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header mid">🟡 <span class="tr-text">Gelişmiş</span><span class="en-text" style="display:none">Advanced</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('timer')">
+            <div class="topic-title tr-text">Timer Kullanımı</div>
+            <div class="topic-title en-text" style="display:none">Timer Usage</div>
+            <div class="topic-title-en">HARDWARE TIMER</div>
+            <div class="topic-desc tr-text">CPU'dan bağımsız donanımsal sayaç. PWM, delay, frekans ölçümü.</div>
+            <div class="topic-desc en-text" style="display:none">Hardware counter independent of CPU. PWM generation, delay, frequency measurement.</div>
+            <div class="topic-tags"><span class="tag">ATmega328P</span><span class="tag">PWM</span><span class="tag">Prescaler</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('interrupt')">
+            <div class="topic-title tr-text">Interrupt Sistemi</div>
+            <div class="topic-title en-text" style="display:none">Interrupt System</div>
+            <div class="topic-title-en">INTERRUPT SYSTEM / KESMELİ SİSTEM</div>
+            <div class="topic-desc tr-text">Olay → CPU akışı durur, ISR çalışır. Uzun ISR = sistem kilitlenir.</div>
+            <div class="topic-desc en-text" style="display:none">Event → CPU flow stops, ISR runs. Long ISR = system freeze.</div>
+            <div class="topic-tags"><span class="tag">ISR</span><span class="tag">External INT</span><span class="tag">Timer INT</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('debounce')">
+            <div class="topic-title tr-text">Debounce Teknikleri</div>
+            <div class="topic-title en-text" style="display:none">Debounce Techniques</div>
+            <div class="topic-title-en">DEBOUNCE / TITREŞIM GİDERME</div>
+            <div class="topic-desc tr-text">Mekanik buton titreşimi. 1 basış = 5 algılama sorunu. RC filtre, yazılım çözümü.</div>
+            <div class="topic-desc en-text" style="display:none">Mechanical button bounce. 1 press = 5 detections problem. RC filter, software solution.</div>
+            <div class="topic-tags"><span class="tag">RC Filtre</span><span class="tag">Schmitt Trigger</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header hard">🔴 Expert<div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('signal-integrity')">
+            <div class="topic-title">Signal Integrity</div>
+            <div class="topic-title-en">SIGNAL INTEGRITY</div>
+            <div class="topic-desc tr-text">Ringing, Overshoot, Crosstalk, Ground bounce. Termination direnci, kısa hat, ground plane.</div>
+            <div class="topic-desc en-text" style="display:none">Ringing, Overshoot, Crosstalk, Ground bounce. Termination resistor, short traces, ground plane.</div>
+            <div class="topic-tags"><span class="tag">Ringing</span><span class="tag">Crosstalk</span><span class="tag">Termination</span></div>
+          </div>
+          <div class="topic-card" onclick="openModal('metastability')">
+            <div class="topic-title">Metastability</div>
+            <div class="topic-title-en">METASTABILITY / METASTABİLİTE</div>
+            <div class="topic-desc tr-text">Flip-flop giriş değişim anında clock yakalarsa belirsiz durum. Fiziksel olay. Çözüm: çift FF zinciri.</div>
+            <div class="topic-desc en-text" style="display:none">Flip-flop captures input change at clock edge → undefined state. Physical phenomenon. Fix: double FF chain.</div>
+            <div class="topic-tags"><span class="tag">Clock Domain</span><span class="tag">Synchronizer</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── POWER ── -->
+    <div class="section" id="sec-power">
+      <div class="breadcrumb">electrolab <span>/</span> <span class="tr-text">güç-elektroniği</span><span class="en-text" style="display:none">power-electronics</span></div>
+      <div class="section-header">
+        <div class="section-icon">⚡</div>
+        <div>
+          <div class="section-title tr-text">Güç Elektroniği</div>
+          <div class="section-title en-text" style="display:none">Power Electronics</div>
+          <div class="section-title-en">POWER ELECTRONICS</div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header easy">🟢 <span class="tr-text">Basit</span><span class="en-text" style="display:none">Basic</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('regulator')"><div class="topic-title tr-text">Regülatör Nedir?</div><div class="topic-title en-text" style="display:none">What is a Regulator?</div><div class="topic-title-en">VOLTAGE REGULATOR</div><div class="topic-desc tr-text">Sabit voltaj kaynağı. Aksi halde reset, ADC hata, çip yanar.</div><div class="topic-desc en-text" style="display:none">Stable voltage source. Otherwise: resets, ADC errors, chip failure.</div><div class="topic-tags"><span class="tag">LM7805</span><span class="tag">Sabit Voltaj</span></div></div>
+          <div class="topic-card" onclick="openModal('linear-vs-switching')"><div class="topic-title tr-text">Linear vs Switching</div><div class="topic-title en-text" style="display:none">Linear vs Switching</div><div class="topic-title-en">LINEAR vs SWITCHING REGULATOR</div><div class="topic-desc tr-text">Linear: temiz çıkış ama ısı üretir. Switching: verimli (%85–95) ama gürültülü.</div><div class="topic-desc en-text" style="display:none">Linear: clean output but generates heat. Switching: efficient (85–95%) but noisy.</div><div class="topic-tags"><span class="tag">LDO</span><span class="tag">Buck</span><span class="tag">Verim</span></div></div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header mid">🟡 <span class="tr-text">Gelişmiş</span><span class="en-text" style="display:none">Advanced</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('buck-boost')"><div class="topic-title tr-text">Buck / Boost Dönüştürücü</div><div class="topic-title en-text" style="display:none">Buck / Boost Converter</div><div class="topic-title-en">BUCK / BOOST CONVERTER</div><div class="topic-desc tr-text">Vout = D × Vin (Buck). Bobin enerji depolar, serbest bırakır.</div><div class="topic-desc en-text" style="display:none">Vout = D × Vin (Buck). Inductor stores and releases energy.</div><div class="topic-tags"><span class="tag">Duty Cycle</span><span class="tag">İndüktör</span><span class="tag">MOSFET</span></div></div>
+          <div class="topic-card" onclick="openModal('gate-resistor')"><div class="topic-title tr-text">Gate Direnci Seçimi</div><div class="topic-title en-text" style="display:none">Gate Resistor Selection</div><div class="topic-title-en">GATE RESISTOR</div><div class="topic-desc tr-text">5–100Ω arası. Küçük → EMI artar. Büyük → ısınma artar.</div><div class="topic-desc en-text" style="display:none">5–100Ω range. Too small → EMI increases. Too large → heating increases.</div><div class="topic-tags"><span class="tag">Ringing</span><span class="tag">EMI</span><span class="tag">Gate</span></div></div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header hard">🔴 Expert<div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('smps')"><div class="topic-title">SMPS Tasarım Mantığı</div><div class="topic-title-en">SMPS DESIGN</div><div class="topic-desc tr-text">Topoloji seç → Frekans → Bobin → MOSFET → Diyot → Feedback → Stabilite.</div><div class="topic-desc en-text" style="display:none">Select topology → Frequency → Inductor → MOSFET → Diode → Feedback → Stability.</div><div class="topic-tags"><span class="tag">Flyback</span><span class="tag">Feedback</span><span class="tag">EMI/EMC</span></div></div>
+          <div class="topic-card" onclick="openModal('thermal')"><div class="topic-title tr-text">Termal Hesap</div><div class="topic-title en-text" style="display:none">Thermal Calculation</div><div class="topic-title-en">THERMAL CALCULATION</div><div class="topic-desc tr-text">Tjunction = Tambient + P × Rθ. 150°C üstü = çip ölümü.</div><div class="topic-desc en-text" style="display:none">Tjunction = Tambient + P × Rθ. Above 150°C = chip death.</div><div class="topic-tags"><span class="tag">Rds(on)</span><span class="tag">Isı Emici</span><span class="tag">Verim</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RF ── -->
+    <div class="section" id="sec-rf">
+      <div class="breadcrumb">electrolab <span>/</span> rf</div>
+      <div class="section-header">
+        <div class="section-icon">📡</div>
+        <div>
+          <div class="section-title">RF Elektroniği</div>
+          <div class="section-title-en">RF ELECTRONICS</div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header easy">🟢 <span class="tr-text">Basit</span><span class="en-text" style="display:none">Basic</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('antenna')"><div class="topic-title tr-text">Anten Temel Mantık</div><div class="topic-title en-text" style="display:none">Antenna Basics</div><div class="topic-title-en">ANTENNA FUNDAMENTALS</div><div class="topic-desc tr-text">Elektrik → elektromanyetik dalga dönüşümü. Boyut = λ/4 genellikle.</div><div class="topic-desc en-text" style="display:none">Converts electricity ↔ electromagnetic waves. Length typically = λ/4.</div><div class="topic-tags"><span class="tag">λ/4</span><span class="tag">Dipole</span></div></div>
+          <div class="topic-card" onclick="openModal('wavelength')"><div class="topic-title tr-text">Frekans – Dalga Boyu</div><div class="topic-title en-text" style="display:none">Frequency – Wavelength</div><div class="topic-title-en">λ = c/f</div><div class="topic-desc tr-text">2.4 GHz WiFi → λ ≈ 12.5cm → λ/4 ≈ 3.1cm. Antenlerin küçük olma sebebi!</div><div class="topic-desc en-text" style="display:none">2.4 GHz WiFi → λ ≈ 12.5cm → λ/4 ≈ 3.1cm. Why WiFi antennas are small!</div><div class="topic-tags"><span class="tag">2.4GHz</span><span class="tag">WiFi</span><span class="tag">λ=c/f</span></div></div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header mid">🟡 <span class="tr-text">Gelişmiş</span><span class="en-text" style="display:none">Advanced</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('impedance')"><div class="topic-title tr-text">Empedans Uyumu</div><div class="topic-title en-text" style="display:none">Impedance Matching</div><div class="topic-title-en">IMPEDANCE MATCHING / EMPEDANS UYUMU</div><div class="topic-desc tr-text">Standart 50Ω. Uyumsuzluk → yansıma, güç kaybı. SWR 1:1 ideal.</div><div class="topic-desc en-text" style="display:none">Standard 50Ω. Mismatch → reflections, power loss. SWR 1:1 is ideal.</div><div class="topic-tags"><span class="tag">50Ω</span><span class="tag">SWR</span><span class="tag">Smith Chart</span></div></div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header hard">🔴 Expert<div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('rf-pcb')"><div class="topic-title">PCB RF Layout</div><div class="topic-title-en">RF PCB LAYOUT</div><div class="topic-desc tr-text">Kısa hat, sürekli ground plane, 90° dönüşten kaçın. Microstrip hesapları gerekir.</div><div class="topic-desc en-text" style="display:none">Short traces, continuous ground plane, avoid 90° turns. Microstrip calculations required.</div><div class="topic-tags"><span class="tag">Microstrip</span><span class="tag">Ground Plane</span><span class="tag">Empedans</span></div></div>
+          <div class="topic-card" onclick="openModal('spectrum')"><div class="topic-title tr-text">Spektrum Analizi</div><div class="topic-title en-text" style="display:none">Spectrum Analysis</div><div class="topic-title-en">SPECTRUM ANALYSIS</div><div class="topic-desc tr-text">Zaman değil frekans domeninde inceleme. Harmonikler, yan bantlar, gürültü tabanı.</div><div class="topic-desc en-text" style="display:none">Analysis in frequency domain, not time domain. Harmonics, sidebands, noise floor.</div><div class="topic-tags"><span class="tag">FFT</span><span class="tag">Harmonik</span><span class="tag">EMI</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MCU ── -->
+    <div class="section" id="sec-mcu">
+      <div class="breadcrumb">electrolab <span>/</span> mcu</div>
+      <div class="section-header">
+        <div class="section-icon">🎚</div>
+        <div>
+          <div class="section-title tr-text">Mikrodenetleyiciler</div>
+          <div class="section-title en-text" style="display:none">Microcontrollers</div>
+          <div class="section-title-en">MICROCONTROLLERS / MCU</div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header easy">🟢 <span class="tr-text">Basit</span><span class="en-text" style="display:none">Basic</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('gpio')"><div class="topic-title">GPIO</div><div class="topic-title-en">GENERAL PURPOSE I/O</div><div class="topic-desc tr-text">INPUT / OUTPUT / INPUT_PULLUP modları. Max ~20-40mA. Direkt motor bağlama = hatalı tasarım.</div><div class="topic-desc en-text" style="display:none">INPUT / OUTPUT / INPUT_PULLUP modes. Max ~20-40mA. Direct motor connection = design error.</div><div class="topic-tags"><span class="tag">HIGH/LOW</span><span class="tag">3.3V/5V</span><span class="tag">Arduino</span></div></div>
+          <div class="topic-card" onclick="openModal('adc')"><div class="topic-title">ADC</div><div class="topic-title-en">ANALOG TO DIGITAL CONVERTER</div><div class="topic-desc tr-text">10-bit ADC: 0–5V → 0–1023. Çözünürlük ≈ 4.88mV/adım. Referans voltaj ve ground kalitesi önemli.</div><div class="topic-desc en-text" style="display:none">10-bit ADC: 0–5V → 0–1023. Resolution ≈ 4.88mV/step. Reference voltage and ground quality matter.</div><div class="topic-tags"><span class="tag">10-bit</span><span class="tag">Referans</span><span class="tag">Gürültü</span></div></div>
+          <div class="topic-card" onclick="openModal('pwm-basic')"><div class="topic-title tr-text">PWM Temeli</div><div class="topic-title en-text" style="display:none">PWM Basics</div><div class="topic-title-en">PULSE WIDTH MODULATION</div><div class="topic-desc tr-text">Duty cycle değişir → ortalama voltaj değişir. 50% = 2.5V (5V sistemde).</div><div class="topic-desc en-text" style="display:none">Duty cycle changes → average voltage changes. 50% = 2.5V (in 5V system).</div><div class="topic-tags"><span class="tag">LED Dimming</span><span class="tag">Motor</span><span class="tag">Buck</span></div></div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header mid">🟡 <span class="tr-text">Gelişmiş</span><span class="en-text" style="display:none">Advanced</span><div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('spi-i2c')"><div class="topic-title">SPI / I2C</div><div class="topic-title-en">SERIAL PROTOCOLS</div><div class="topic-desc tr-text">I2C: 2 hat, master-slave, yavaş, adresli. SPI: 4 hat, hızlı, CS ile seçim.</div><div class="topic-desc en-text" style="display:none">I2C: 2-wire, master-slave, slow, addressed. SPI: 4-wire, fast, CS selection.</div><div class="topic-tags"><span class="tag">SDA/SCL</span><span class="tag">MOSI/MISO</span><span class="tag">CS</span></div></div>
+          <div class="topic-card" onclick="openModal('watchdog')"><div class="topic-title">Watchdog</div><div class="topic-title-en">WATCHDOG TIMER</div><div class="topic-desc tr-text">Program kilitlenirse sistemi resetler. Kod beslemeyi keserse otomatik reset.</div><div class="topic-desc en-text" style="display:none">Resets system if program freezes. Automatic reset if code stops feeding it.</div><div class="topic-tags"><span class="tag">WDT</span><span class="tag">Reset</span><span class="tag">Güvenlik</span></div></div>
+        </div>
+      </div>
+      <div class="level-group">
+        <div class="level-header hard">🔴 Expert<div class="level-line"></div></div>
+        <div class="topic-cards">
+          <div class="topic-card" onclick="openModal('bare-metal')"><div class="topic-title tr-text">Bare Metal Programlama</div><div class="topic-title en-text" style="display:none">Bare Metal Programming</div><div class="topic-title-en">BARE METAL PROGRAMMING</div><div class="topic-desc tr-text">Kütüphane yok, direkt register kontrolü. PORTB, DDRB, TCCR1A. Maksimum hız ve kontrol.</div><div class="topic-desc en-text" style="display:none">No libraries, direct register control. PORTB, DDRB, TCCR1A. Maximum speed and control.</div><div class="topic-tags"><span class="tag">Register</span><span class="tag">AVR</span><span class="tag">Hız</span></div></div>
+          <div class="topic-card" onclick="openModal('rtos')"><div class="topic-title">RTOS Mantığı</div><div class="topic-title-en">REAL-TIME OS / RTOS</div><div class="topic-desc tr-text">FreeRTOS (ESP32 içinde). Görevler paralel çalışır gibi görünür. Task yönetimi.</div><div class="topic-desc en-text" style="display:none">FreeRTOS (built into ESP32). Tasks appear to run in parallel. Task management.</div><div class="topic-tags"><span class="tag">FreeRTOS</span><span class="tag">ESP32</span><span class="tag">Task</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MEASUREMENT ── -->
+    <div class="section" id="sec-measurement">
+      <div class="breadcrumb">electrolab <span>/</span> <span class="tr-text">ölçüm</span><span class="en-text" style="display:none">measurement</span></div>
+      <div class="section-header">
+        <div class="section-icon">📋</div>
+        <div>
+          <div class="section-title tr-text">Ölçüm Teknikleri</div>
+          <div class="section-title en-text" style="display:none">Measurement Techniques</div>
+          <div class="section-title-en">MEASUREMENT TECHNIQUES</div>
+        </div>
+      </div>
+      <div class="topic-cards">
+        <div class="topic-card" onclick="openModal('multimeter')"><div class="topic-title tr-text">Multimetre Doğru Kullanım</div><div class="topic-title en-text" style="display:none">Proper Multimeter Use</div><div class="topic-title-en">MULTIMETER</div><div class="topic-desc tr-text">Voltaj paralel, akım seri. Yanlış bağlantı = sigorta atar. Devre enerjisizken direnç ölç.</div><div class="topic-desc en-text" style="display:none">Voltage parallel, current in series. Wrong connection = blown fuse. Measure resistance with circuit off.</div><div class="topic-tags"><span class="tag">Voltaj</span><span class="tag">Akım</span><span class="tag">Direnç</span></div></div>
+        <div class="topic-card" onclick="openModal('oscilloscope')"><div class="topic-title tr-text">Osiloskop Prob Kalibrasyonu</div><div class="topic-title en-text" style="display:none">Oscilloscope Probe Calibration</div><div class="topic-title-en">OSCILLOSCOPE PROBE</div><div class="topic-desc tr-text">10x prob daha az yük, daha geniş bant. Kalibrasyon yapılmazsa dalga şekli yalancı.</div><div class="topic-desc en-text" style="display:none">10x probe: less loading, wider bandwidth. Without calibration, waveform is misleading.</div><div class="topic-tags"><span class="tag">1x/10x</span><span class="tag">Bant Genişliği</span></div></div>
+        <div class="topic-card" onclick="openModal('rms')"><div class="topic-title">RMS Ölçümü</div><div class="topic-title-en">RMS MEASUREMENT</div><div class="topic-desc tr-text">Vrms = Vpeak/√2 (sadece sinüs). Kare dalga için farklı. Motor, ısıtıcı hesabında şart.</div><div class="topic-desc en-text" style="display:none">Vrms = Vpeak/√2 (sine only). Different for square wave. Required for motor and heater calculations.</div><div class="topic-tags"><span class="tag">True RMS</span><span class="tag">AC Güç</span></div></div>
+        <div class="topic-card" onclick="openModal('differential')"><div class="topic-title tr-text">Diferansiyel Ölçüm</div><div class="topic-title en-text" style="display:none">Differential Measurement</div><div class="topic-title-en">DIFFERENTIAL MEASUREMENT</div><div class="topic-desc tr-text">Ground referanssız iki nokta arası ölçüm. Yanlış yapılırsa kısa devre!</div><div class="topic-desc en-text" style="display:none">Measurement between two points without ground reference. Wrong approach = short circuit!</div><div class="topic-tags"><span class="tag">Diferansiyel Prob</span><span class="tag">CH1-CH2</span></div></div>
+      </div>
+    </div>
+
+    <!-- ── SAFETY ── -->
+    <div class="section" id="sec-safety">
+      <div class="breadcrumb">electrolab <span>/</span> <span class="tr-text">güvenlik</span><span class="en-text" style="display:none">safety</span></div>
+      <div class="section-header">
+        <div class="section-icon">⛔</div>
+        <div>
+          <div class="section-title tr-text">Güvenlik</div>
+          <div class="section-title en-text" style="display:none">Safety</div>
+          <div class="section-title-en">ELECTRICAL SAFETY</div>
+        </div>
+      </div>
+      <div class="topic-cards">
+        <div class="topic-card" onclick="openModal('short')"><div class="topic-title tr-text">Kısa Devre</div><div class="topic-title en-text" style="display:none">Short Circuit</div><div class="topic-title-en">SHORT CIRCUIT</div><div class="topic-desc tr-text">R≈0 → I=∞. Kablo ısınır, PCB yanar, batarya patlayabilir. Li-ion özellikle tehlikeli.</div><div class="topic-desc en-text" style="display:none">R≈0 → I=∞. Wire heats, PCB burns, battery may explode. Li-ion especially dangerous.</div><div class="topic-tags"><span class="tag">Li-ion</span><span class="tag">Sigorta</span><span class="tag">Akım Limit</span></div></div>
+        <div class="topic-card" onclick="openModal('fuse')"><div class="topic-title tr-text">Sigorta Seçimi</div><div class="topic-title en-text" style="display:none">Fuse Selection</div><div class="topic-title-en">FUSE SELECTION</div><div class="topic-desc tr-text">Fast blow: hassas devreler. Slow blow: motor, SMPS. Büyük sigorta takma = risk artırma!</div><div class="topic-desc en-text" style="display:none">Fast blow: sensitive circuits. Slow blow: motor, SMPS. Bigger fuse = more risk!</div><div class="topic-tags"><span class="tag">Fast/Slow</span><span class="tag">Nominal Akım</span></div></div>
+        <div class="topic-card" onclick="openModal('esd')"><div class="topic-title">ESD Koruma</div><div class="topic-title-en">ESD PROTECTION</div><div class="topic-desc tr-text">5kV–15kV statik yük hissetmeden boşalır. TVS diyot, seri direnç, ESD matı.</div><div class="topic-desc en-text" style="display:none">5kV–15kV static charge discharges unfelt. TVS diode, series resistor, ESD mat.</div><div class="topic-tags"><span class="tag">TVS</span><span class="tag">Statik</span><span class="tag">ESD Mat</span></div></div>
+        <div class="topic-card" onclick="openModal('hv')"><div class="topic-title tr-text">HV Güvenlik</div><div class="topic-title en-text" style="display:none">HV Safety</div><div class="topic-title-en">HIGH VOLTAGE SAFETY</div><div class="topic-desc tr-text">Clearance + Creepage mesafeleri. Yüksek voltajda hava iyonlaşır, ark = yangın/ölüm.</div><div class="topic-desc en-text" style="display:none">Clearance + Creepage distances. Air ionizes at high voltage, arcing = fire/death.</div><div class="topic-tags"><span class="tag">Clearance</span><span class="tag">Creepage</span><span class="tag">Ark</span></div></div>
+        <div class="topic-card" onclick="openModal('isolation')"><div class="topic-title tr-text">İzolasyon Bariyer Tasarımı</div><div class="topic-title en-text" style="display:none">Isolation Barrier Design</div><div class="topic-title-en">ISOLATION BARRIER</div><div class="topic-desc tr-text">Optokuplör (PC817), izole DC-DC. HV ve LV fiziksel ayrımı. PCB slot ve konformal kaplama.</div><div class="topic-desc en-text" style="display:none">Optocoupler (PC817), isolated DC-DC. Physical HV/LV separation. PCB slot and conformal coating.</div><div class="topic-tags"><span class="tag">Optokuplör</span><span class="tag">3kV İzolasyon</span></div></div>
+      </div>
+    </div>
+
+    <!-- ── SIGNALS ── -->
+    <div class="section" id="sec-signals">
+      <div class="breadcrumb">electrolab <span>/</span> <span class="tr-text">sinyaller</span><span class="en-text" style="display:none">signals</span></div>
+      <div class="section-header">
+        <div class="section-icon">～</div>
+        <div>
+          <div class="section-title tr-text">Sinyal Türleri</div>
+          <div class="section-title en-text" style="display:none">Signal Types</div>
+          <div class="section-title-en">MCU SIGNAL GENERATION</div>
+        </div>
+      </div>
+      <p class="tr-text" style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem;font-family:var(--font-mono)">// Mikrodenetleyici tabanlı sinyal üretimi</p>
+      <p class="en-text" style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1.5rem;font-family:var(--font-mono);display:none">// Microcontroller-based signal generation</p>
+      <div class="signal-grid">
+        <div class="signal-card">
+          <div class="signal-num">01</div>
+          <div class="signal-name tr-text">Dijital</div>
+          <div class="signal-name en-text" style="display:none">Digital</div>
+          <svg class="waveform-preview" viewBox="0 0 100 40"><polyline points="0,35 0,5 25,5 25,35 50,35 50,5 75,5 75,35 100,35" fill="none" stroke="var(--accent)" stroke-width="2"/></svg>
+          <div class="signal-desc tr-text">GPIO HIGH/LOW. En stabil form. Timer gerekmez.</div>
+          <div class="signal-desc en-text" style="display:none">GPIO HIGH/LOW. Most stable form. No timer required.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-num">02</div>
+          <div class="signal-name">PWM</div>
+          <svg class="waveform-preview" viewBox="0 0 100 40"><polyline points="0,35 0,5 15,5 15,35 35,35 35,5 50,5 50,35 70,35 70,5 85,5 85,35 100,35" fill="none" stroke="var(--yellow)" stroke-width="2"/></svg>
+          <div class="signal-desc tr-text">Timer ile üretilir. MOSFET sürme için ideal. Az ısınma.</div>
+          <div class="signal-desc en-text" style="display:none">Generated by timer. Ideal for MOSFET driving. Low heat.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-num">03</div>
+          <div class="signal-name tr-text">Kare Dalga</div>
+          <div class="signal-name en-text" style="display:none">Square Wave</div>
+          <svg class="waveform-preview" viewBox="0 0 100 40"><polyline points="0,35 0,5 25,5 25,35 50,35 50,5 75,5 75,35 100,35" fill="none" stroke="var(--accent2)" stroke-width="2"/></svg>
+          <div class="signal-desc tr-text">Timer frekansı değiştirilerek üretilir. Osilatör gibi kullanılabilir.</div>
+          <div class="signal-desc en-text" style="display:none">Generated by changing timer frequency. Can be used as oscillator.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-num">04</div>
+          <div class="signal-name">Pulse</div>
+          <svg class="waveform-preview" viewBox="0 0 100 40"><polyline points="0,35 0,35 40,35 40,5 50,5 50,35 100,35" fill="none" stroke="var(--accent3)" stroke-width="2"/></svg>
+          <div class="signal-desc tr-text">Tek atımlık darbe. Monostable mantık. Servo sürme için kritik.</div>
+          <div class="signal-desc en-text" style="display:none">Single-shot pulse. Monostable logic. Critical for servo driving.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-num">05</div>
+          <div class="signal-name tr-text">Üçgen Dalga</div>
+          <div class="signal-name en-text" style="display:none">Triangle Wave</div>
+          <svg class="waveform-preview" viewBox="0 0 100 40"><polyline points="0,35 25,5 50,35 75,5 100,35" fill="none" stroke="var(--green)" stroke-width="2"/></svg>
+          <div class="signal-desc tr-text">Doğrudan üretilemez. PWM + RC filtre veya DAC artımlı çıkış.</div>
+          <div class="signal-desc en-text" style="display:none">Cannot be generated directly. PWM + RC filter or incremental DAC output.</div>
+        </div>
+        <div class="signal-card">
+          <div class="signal-num">06</div>
+          <div class="signal-name tr-text">Sinüs</div>
+          <div class="signal-name en-text" style="display:none">Sine Wave</div>
+          <svg class="waveform-preview" viewBox="0 0 100 40">
+            <path d="M0,20 C5,20 10,5 25,5 C40,5 45,35 50,35 C55,35 60,5 75,5 C90,5 95,20 100,20" fill="none" stroke="var(--red)" stroke-width="2"/>
+          </svg>
+          <div class="signal-desc tr-text">En zor sinyal. Lookup table + hızlı güncelleme veya harici DAC.</div>
+          <div class="signal-desc en-text" style="display:none">Most difficult signal. Lookup table + fast update or external DAC.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECTS ── -->
+    <div class="section" id="sec-projects">
+      <div class="breadcrumb">electrolab <span>/</span> <span class="tr-text">projeler</span><span class="en-text" style="display:none">projects</span></div>
+      <div class="section-header">
+        <div class="section-icon">💡</div>
+        <div>
+          <div class="section-title tr-text">Projeler</div>
+          <div class="section-title en-text" style="display:none">Projects</div>
+          <div class="section-title-en">ALPHATECH INC. — ACTIVE PROJECTS</div>
+        </div>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card" onclick="openModal('proj-osilator')">
+          <div class="project-header">
+            <div class="project-icon">🎚</div>
+            <div>
+              <div class="project-name tr-text">Osilatör Devresi</div>
+              <div class="project-name en-text" style="display:none">Oscillator Circuit</div>
+              <div class="project-name-en">LM555 · EAGLE PCB DESIGN</div>
+            </div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc tr-text">LM555 tabanlı osilatör devresi. Potansiyometre ile frekans ayarı, NPN transistör çıkışı. EAGLE ile PCB tasarımı tamamlandı.</div>
+            <div class="project-desc en-text" style="display:none">LM555-based oscillator circuit. Frequency control via potentiometer, NPN transistor output. PCB design completed in EAGLE.</div>
+            <div class="project-chips">
+              <span class="chip chip-hw">LM555</span>
+              <span class="chip chip-hw">NPN</span>
+              <span class="chip chip-hw">PCB</span>
+              <span class="chip chip-sw">EAGLE</span>
+              <span class="chip chip-lvl">Gelişmiş / Advanced</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-card" onclick="openModal('proj-osiloskop')">
+          <div class="project-header">
+            <div class="project-icon">📺</div>
+            <div>
+              <div class="project-name tr-text">DIY Osiloskop</div>
+              <div class="project-name en-text" style="display:none">DIY Oscilloscope</div>
+              <div class="project-name-en">ARDUINO + OLED · 3 VERSİYON</div>
+            </div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc tr-text">Arduino Uno + SSD1306 OLED ile osiloskop. 3 versiyon: temel, grid'li, tam özellikli (trigger, pause, Volt/div). ADC turbo modu.</div>
+            <div class="project-desc en-text" style="display:none">Oscilloscope with Arduino Uno + SSD1306 OLED. 3 versions: basic, with grid, full featured (trigger, pause, V/div). ADC turbo mode.</div>
+            <div class="project-chips">
+              <span class="chip chip-hw">Arduino Uno</span>
+              <span class="chip chip-hw">SSD1306</span>
+              <span class="chip chip-sw">C++ / Arduino IDE</span>
+              <span class="chip chip-lvl">Expert</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-card" onclick="openModal('proj-lasertag')">
+          <div class="project-header">
+            <div class="project-icon">✴️</div>
+            <div>
+              <div class="project-name">LaserCompact</div>
+              <div class="project-name-en">ALPHATECH INC. · LASER TAG SYSTEM</div>
+            </div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc tr-text">LaserTag sistemi. 2–4 oyuncu, kapalı alan. IR sensör + RF haberleşme. Merkezi bildirim sistemi. Birden fazla oyun modu.</div>
+            <div class="project-desc en-text" style="display:none">LaserTag system. 2–4 players, indoor use. IR sensor + RF communication. Central notification system. Multiple game modes.</div>
+            <div class="project-chips">
+              <span class="chip chip-hw">Arduino</span>
+              <span class="chip chip-hw">IR Sensör</span>
+              <span class="chip chip-hw">RF</span>
+              <span class="chip chip-sw">Wireless Protocol</span>
+              <span class="chip chip-lvl">Expert</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-card" onclick="openModal('proj-relaybank')">
+          <div class="project-header">
+            <div class="project-icon">⌨️</div>
+            <div>
+              <div class="project-name">RelayBank</div>
+              <div class="project-name-en">16-CHANNEL RF RELAY CONTROLLER</div>
+            </div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc tr-text">STX882/SRX882 RF modülleri ile 16 kanal röle kontrolcüsü. Verici Arduino (D2–D5 buton, D6–D9 LED, D12 RF TX). 4-bit binary gösterge.</div>
+            <div class="project-desc en-text" style="display:none">16-channel relay controller via STX882/SRX882 RF modules. Transmitter Arduino (D2–D5 buttons, D6–D9 LEDs, D12 RF TX). 4-bit binary display.</div>
+            <div class="project-chips">
+              <span class="chip chip-hw">STX882</span>
+              <span class="chip chip-hw">SRX882</span>
+              <span class="chip chip-hw">16ch Röle</span>
+              <span class="chip chip-sw">RF Protocol</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-card" onclick="openModal('proj-pedalboard')">
+          <div class="project-header">
+            <div class="project-icon">🎛</div>
+            <div>
+              <div class="project-name">Pedalboard</div>
+              <div class="project-name-en">WAH + OD + DIST + BITCRUSHER</div>
+            </div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc tr-text">4 gitar pedalı: Wah, Overdrive, Distortion, Bitcrusher. True bypass, DPDT switch. TL072, LM358, NE555, CD4066 tabanlı. Bobinsiz tasarım.</div>
+            <div class="project-desc en-text" style="display:none">4 guitar pedals: Wah, Overdrive, Distortion, Bitcrusher. True bypass, DPDT switch. TL072, LM358, NE555, CD4066 based. Inductor-free design.</div>
+            <div class="project-chips">
+              <span class="chip chip-hw">TL072</span>
+              <span class="chip chip-hw">NE555</span>
+              <span class="chip chip-hw">CD4066</span>
+              <span class="chip chip-lvl">Gelişmiş / Advanced</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+</div><!-- /main-wrap -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">[ ElektroLab ]</div>
+  <div class="footer-text">ALPHATECH INC. · ALPBURAK ATALAY · <span class="tr-text">TÜM HAKLAR SAKLIDIR</span><span class="en-text" style="display:none">ALL RIGHTS RESERVED</span></div>
+</footer>
+
+<!-- ══════════════ MODAL ══════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-topbar">
+      <span class="modal-path" id="modal-path">electrolab / ...</span>
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// LANGUAGE
+// ═══════════════════════════════════════════════
+let currentLang = 'tr';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-tr').classList.toggle('active', lang === 'tr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.querySelectorAll('.tr-text').forEach(el => el.style.display = lang === 'tr' ? '' : 'none');
+  document.querySelectorAll('.en-text').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tree-item').forEach(t => t.classList.remove('active'));
+
+  const sec = document.getElementById('sec-' + id);
+  if (sec) sec.classList.add('active');
+
+  const tabs = document.querySelectorAll('.nav-tab');
+  const sectionMap = {overview:0,analog:1,digital:2,power:3,rf:4,mcu:5,measurement:6,safety:7,signals:8,projects:9};
+  if (sectionMap[id] !== undefined) tabs[sectionMap[id]].classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════
+function filterCards() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  document.querySelectorAll('.cat-card').forEach(card => {
+    card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ═══════════════════════════════════════════════
+// MODAL DATA
+// ═══════════════════════════════════════════════
+const modals = {
+  ohm: {
+    path: 'analog / basic / ohm',
+    tr: {
+      title: 'Ohm Yasası',
+      subtitle: "OHM'S LAW",
+      sections: [
+        { label: 'TANIM', content: 'Gerilim (V), akım (I) ve direnç (R) arasındaki temel ilişkidir.' },
+        { label: 'FORMÜL', formula: 'V = I · R' },
+        { label: 'GÜÇ İLİŞKİSİ', formula: 'P = V · I = I² · R = V² / R' },
+        { label: 'FİZİKSEL YORUM', content: 'Direnç, elektron akışına karşı gösterilen zorluktur. Direnç arttıkça aynı gerilimde akım azalır.' },
+        { label: 'GERÇEK HAYAT', list: ['LED akım sınırlama', 'Isıtıcı hesapları', 'Sigorta seçimi'] },
+        { label: 'KRİTİK HATA', warning: 'Güç hesabı yapmazsan direnç yanar!' }
+      ]
+    },
+    en: {
+      title: "Ohm's Law",
+      subtitle: "OHM YASASI",
+      sections: [
+        { label: 'DEFINITION', content: 'The fundamental relationship between voltage (V), current (I) and resistance (R).' },
+        { label: 'FORMULA', formula: 'V = I · R' },
+        { label: 'POWER RELATIONS', formula: 'P = V · I = I² · R = V² / R' },
+        { label: 'PHYSICAL MEANING', content: 'Resistance is the opposition to electron flow. Higher resistance means lower current at the same voltage.' },
+        { label: 'REAL WORLD', list: ['LED current limiting', 'Heater calculations', 'Fuse selection'] },
+        { label: 'CRITICAL ERROR', warning: 'Skip the power calculation and the resistor burns!' }
+      ]
+    }
+  },
+  rc: {
+    path: 'analog / basic / rc-time-constant',
+    tr: {
+      title: 'RC Zaman Sabiti',
+      subtitle: 'RC TIME CONSTANT',
+      sections: [
+        { label: 'TANIM', content: 'Bir RC devresinde kondansatörün şarj/deşarj süresini belirler.' },
+        { label: 'FORMÜL', formula: 'τ = R · C' },
+        { label: 'ANLAMI', content: '1 zaman sabitesinde voltaj hedef değerin %63\'üne ulaşır. 5τ sonunda sistem neredeyse tamamen dolar (%99.3).' },
+        { label: 'KULLANIM', list: ['Delay devreleri', 'Alçak geçiren filtreler', 'Osilatörler', 'Debounce devreleri'] },
+        { label: 'KRİTİK NOKTA', warning: 'R büyük → yavaş tepki. C büyük → yavaş tepki. İkisi de aynı etkiye sahip!' }
+      ]
+    },
+    en: {
+      title: 'RC Time Constant',
+      subtitle: 'RC ZAMAN SABİTİ',
+      sections: [
+        { label: 'DEFINITION', content: 'Determines the charge/discharge time of a capacitor in an RC circuit.' },
+        { label: 'FORMULA', formula: 'τ = R · C' },
+        { label: 'MEANING', content: 'After 1 time constant, voltage reaches 63% of target. After 5τ, system is ~99.3% charged.' },
+        { label: 'APPLICATIONS', list: ['Delay circuits', 'Low-pass filters', 'Oscillators', 'Debounce circuits'] },
+        { label: 'KEY POINT', warning: 'Large R → slow response. Large C → slow response. Both have the same effect!' }
+      ]
+    }
+  },
+  diode: {
+    path: 'analog / basic / diode',
+    tr: {
+      title: 'Diyot Temel Çalışma',
+      subtitle: 'DIODE FUNDAMENTALS',
+      sections: [
+        { label: 'TANIM', content: 'Tek yönde iletir, diğer yönde yalıtır. P-N ekleminden oluşur.' },
+        { label: 'TEMEL PARAMETRELER', list: ['Forward voltage Si için ~0.7V', 'Ge için ~0.3V', 'Terse dayanım voltajı (PIV)', 'Maksimum akım'] },
+        { label: 'KULLANIM', list: ['AC doğrultma (rectifier)', 'Ters polarite koruması', 'Klamp devreleri'] },
+        { label: 'RİSK', warning: 'Terse voltaj aşılırsa diyot delinerek bozulur (avalanche/breakdown)!' }
+      ]
+    },
+    en: {
+      title: 'Diode Basics',
+      subtitle: 'DİYOT TEMELLERİ',
+      sections: [
+        { label: 'DEFINITION', content: 'Conducts in one direction, blocks in the other. Made from a P-N junction.' },
+        { label: 'KEY PARAMETERS', list: ['Forward voltage Si ~0.7V', 'Ge ~0.3V', 'Reverse breakdown voltage (PIV)', 'Maximum current'] },
+        { label: 'APPLICATIONS', list: ['AC rectification', 'Reverse polarity protection', 'Clamp circuits'] },
+        { label: 'RISK', warning: 'Exceeding reverse voltage destroys the diode (avalanche/breakdown)!' }
+      ]
+    }
+  },
+  transistor: {
+    path: 'analog / basic / transistor-switch',
+    tr: {
+      title: 'Transistör (Anahtar Modu)',
+      subtitle: 'TRANSISTOR SWITCH MODE',
+      sections: [
+        { label: 'AMAÇ', content: 'Küçük bir kontrol sinyali ile büyük bir yükü açıp kapatmak.' },
+        { label: 'MODLAR', list: ['Kesim (Cutoff): Tamamen kapalı — akım geçmez', 'Aktif: Lineer amplifikasyon bölgesi', 'Doyum (Saturation): Tamamen açık — max akım'] },
+        { label: 'BJT vs MOSFET', list: ['BJT: Akım kontrollü, analog için iyi', 'MOSFET: Voltaj kontrollü, güç anahtarlaması için ideal'] },
+        { label: 'KRİTİK HATA', warning: 'MOSFET\'i gate direnci olmadan sürmek ringing\'e neden olur. Her zaman 10–100Ω gate direnci koy!' }
+      ]
+    },
+    en: {
+      title: 'Transistor (Switch Mode)',
+      subtitle: 'TRANSISTÖR ANAHTAR MODU',
+      sections: [
+        { label: 'PURPOSE', content: 'Control a large load with a small signal.' },
+        { label: 'OPERATING MODES', list: ['Cutoff: Fully off — no current', 'Active: Linear amplification region', 'Saturation: Fully on — max current'] },
+        { label: 'BJT vs MOSFET', list: ['BJT: Current-controlled, good for analog', 'MOSFET: Voltage-controlled, ideal for power switching'] },
+        { label: 'CRITICAL ERROR', warning: 'Driving MOSFET without gate resistor causes ringing. Always add 10–100Ω gate resistor!' }
+      ]
+    }
+  },
+  opamp: {
+    path: 'analog / advanced / opamp',
+    tr: { title: 'Op-Amp Devreleri', subtitle: 'OPERATIONAL AMPLIFIER', sections: [{ label: 'İDEAL ÖZELLİKLER', list: ['Sonsuz kazanç (open-loop)', 'Sonsuz giriş empedansı', 'Sıfır çıkış empedansı', 'Sonsuz bant genişliği'] }, { label: 'KONFIGÜRASYONLAR', list: ['Non-inverting: Gain = 1 + Rf/Rg', 'Inverting: Gain = -Rf/Rg', 'Buffer (Voltage Follower): Gain = 1'] }, { label: 'FORMÜL', formula: 'Gain (Non-inv) = 1 + Rf/Rg' }, { label: 'KRİTİK', warning: 'Gerçek op-amplar bant genişliği ile sınırlıdır. GBW ürününe dikkat!' }] },
+    en: { title: 'Op-Amp Circuits', subtitle: 'OPERASYONEL AMPLİFİKATÖR', sections: [{ label: 'IDEAL PROPERTIES', list: ['Infinite open-loop gain', 'Infinite input impedance', 'Zero output impedance', 'Infinite bandwidth'] }, { label: 'CONFIGURATIONS', list: ['Non-inverting: Gain = 1 + Rf/Rg', 'Inverting: Gain = -Rf/Rg', 'Buffer (Voltage Follower): Gain = 1'] }, { label: 'FORMULA', formula: 'Gain (Non-inv) = 1 + Rf/Rg' }, { label: 'CRITICAL', warning: 'Real op-amps are bandwidth-limited. Watch the GBW product!' }] }
+  },
+  filter: {
+    path: 'analog / advanced / filter',
+    tr: { title: 'Aktif Filtre Tasarımı', subtitle: 'ACTIVE FILTER DESIGN', sections: [{ label: 'TİPLER', list: ['Low Pass Filter (LPF): Alçak frekanslar geçer', 'High Pass Filter (HPF): Yüksek frekanslar geçer', 'Band Pass Filter (BPF): Belirli bant geçer'] }, { label: 'KESİM FREKANSI', formula: 'fc = 1 / (2π · R · C)' }, { label: 'AMAÇ', content: 'İstenmeyen frekansları bastırmak, sinyal kalitesini artırmak.' }, { label: 'KRİTİK', warning: 'Yük empedansı filtreyi bozar. Buffer ile izole et!' }] },
+    en: { title: 'Active Filter Design', subtitle: 'AKTİF FİLTRE TASARIMI', sections: [{ label: 'TYPES', list: ['Low Pass Filter (LPF): Low frequencies pass', 'High Pass Filter (HPF): High frequencies pass', 'Band Pass Filter (BPF): Specific band passes'] }, { label: 'CUTOFF FREQUENCY', formula: 'fc = 1 / (2π · R · C)' }, { label: 'PURPOSE', content: 'Suppress unwanted frequencies, improve signal quality.' }, { label: 'CRITICAL', warning: 'Load impedance distorts the filter. Isolate with a buffer!' }] }
+  },
+  gpio: {
+    path: 'mcu / basic / gpio',
+    tr: { title: 'GPIO (General Purpose I/O)', subtitle: 'DİJİTAL GİRİŞ/ÇIKIŞ', sections: [{ label: 'MODLAR', list: ['INPUT: Dış sinyali okur', 'OUTPUT: Pin HIGH/LOW yapar', 'INPUT_PULLUP: İç pull-up ile giriş'] }, { label: 'GERİLİM SEVİYELERİ', list: ['Arduino Uno: 5V sistem', 'ESP32: 3.3V sistem (5V toleranssız!)'] }, { label: 'KRİTİK GERÇEK', warning: 'Pinler sınırsız akım veremez! Tipik limit 20–40mA. Direkt motor bağlamak = pin yakar!' }] },
+    en: { title: 'GPIO (General Purpose I/O)', subtitle: 'DİJİTAL I/O', sections: [{ label: 'MODES', list: ['INPUT: Read external signal', 'OUTPUT: Set pin HIGH/LOW', 'INPUT_PULLUP: Input with internal pull-up'] }, { label: 'VOLTAGE LEVELS', list: ['Arduino Uno: 5V system', 'ESP32: 3.3V system (NOT 5V tolerant!)'] }, { label: 'CRITICAL FACT', warning: 'Pins cannot supply unlimited current! Typical limit 20–40mA. Direct motor connection = burned pin!' }] }
+  },
+  adc: {
+    path: 'mcu / basic / adc',
+    tr: { title: 'ADC (Analog to Digital Converter)', subtitle: 'ANALOGdan DİJİTALE', sections: [{ label: 'TANIM', content: 'Analog voltajı sayısal değere çevirir. Arduino 10-bit: 0–5V → 0–1023.' }, { label: 'ÇÖZÜNÜRLÜK', formula: 'Adım = 5V / 1024 ≈ 4.88 mV' }, { label: 'DOĞRULUĞU ETKİLEYEN FAKTÖRLER', list: ['Referans voltaj kararlılığı', 'Ground gürültüsü', 'Analog-dijital ground ayrımı', 'Kaynak empedansı'] }, { label: 'KRİTİK', warning: 'Analog ve dijital ground\'u karıştırırsan ADC ölçümleri anlamsızlaşır!' }] },
+    en: { title: 'ADC (Analog to Digital Converter)', subtitle: 'ANALOGdan DİJİTALE', sections: [{ label: 'DEFINITION', content: 'Converts analog voltage to digital value. Arduino 10-bit: 0–5V → 0–1023.' }, { label: 'RESOLUTION', formula: 'Step size = 5V / 1024 ≈ 4.88 mV' }, { label: 'ACCURACY FACTORS', list: ['Reference voltage stability', 'Ground noise', 'Analog-digital ground separation', 'Source impedance'] }, { label: 'CRITICAL', warning: 'Mixing analog and digital ground makes ADC readings meaningless!' }] }
+  },
+  short: {
+    path: 'safety / basic / short-circuit',
+    tr: { title: 'Kısa Devre', subtitle: 'SHORT CIRCUIT', sections: [{ label: 'TANIM', content: 'İki farklı potansiyelin direnç olmadan doğrudan birleşmesi. R≈0Ω → I çok büyük.' }, { label: 'FORMÜL', formula: 'I = V / R → R≈0 → I = ∞' }, { label: 'SONUÇLAR', list: ['Kablo ve izolasyon ısınır/erir', 'PCB izi yanar', 'Güç kaynağı korumaya girer', 'Li-ion batarya patlayabilir!'] }, { label: 'ÖNLEME', list: ['Enerji vermeden önce görsel kontrol', 'Multimetre ile kısa devre testi', 'Akım sınırlamalı güç kaynağı', 'Sigorta kullanmak'] }, { label: 'KRİTİK UYARI', warning: 'Li-ion batarya varsa kısa devre son derece tehlikelidir. Yangın ve patlama riski!' }] },
+    en: { title: 'Short Circuit', subtitle: 'KISA DEVRE', sections: [{ label: 'DEFINITION', content: 'Direct connection of two different potentials without resistance. R≈0Ω → I very large.' }, { label: 'FORMULA', formula: 'I = V / R → R≈0 → I = ∞' }, { label: 'CONSEQUENCES', list: ['Wire and insulation heat up/melt', 'PCB trace burns', 'Power supply enters protection', 'Li-ion battery may explode!'] }, { label: 'PREVENTION', list: ['Visual inspection before powering', 'Short circuit test with multimeter', 'Current-limited power supply', 'Use fuses'] }, { label: 'CRITICAL WARNING', warning: 'With Li-ion batteries, short circuit is extremely dangerous. Fire and explosion risk!' }] }
+  },
+  'proj-osiloskop': {
+    path: 'projects / diy-oscilloscope',
+    tr: { title: 'DIY Osiloskop', subtitle: 'ARDUINO + SSD1306 OLED', sections: [
+      { label: 'PROJE ÖZETİ', content: 'Arduino Uno ile A0 pinine bağlı analog sinyal, OLED ekranda görselleştirilir. 3 versiyon mevcuttur: temel, grid\'li, ve tam özellikli.' },
+      { label: 'ÖZELLİKLER (V3)', list: ['Trigger sistemi (rising edge)', 'Pause / Hold modu', 'Volt/div ayarı (0.5V – 5V)', 'Grid gösterimi', 'ADC turbo modu (prescaler=16)', 'Time/div: 20us – 1000us'] },
+      { label: 'DONANIM BAĞLANTISI', formula: '5V ─ 10k ─┬─ A0\n             ┤\nGND ─ 10k ─┘\nSinyal ─ 10k ─┘' },
+      { label: 'KÜTÜPHANELEr', list: ['Wire.h', 'Adafruit_GFX.h', 'Adafruit_SSD1306.h'] }
+    ]},
+    en: { title: 'DIY Oscilloscope', subtitle: 'ARDUINO + SSD1306 OLED', sections: [
+      { label: 'PROJECT SUMMARY', content: 'Analog signal on A0 pin is visualized on OLED display. 3 versions: basic, with grid, and full-featured.' },
+      { label: 'FEATURES (V3)', list: ['Trigger system (rising edge)', 'Pause / Hold mode', 'Volt/div setting (0.5V – 5V)', 'Grid display', 'ADC turbo mode (prescaler=16)', 'Time/div: 20us – 1000us'] },
+      { label: 'HARDWARE CONNECTION', formula: '5V ─ 10k ─┬─ A0\n             ┤\nGND ─ 10k ─┘\nSignal ─ 10k ─┘' },
+      { label: 'LIBRARIES', list: ['Wire.h', 'Adafruit_GFX.h', 'Adafruit_SSD1306.h'] }
+    ]}
+  },
+  'proj-osilator': {
+    path: 'projects / oscillator-circuit',
+    tr: { title: 'Osilatör Devresi', subtitle: 'LM555 ASTABLE MULTIVIBRATOR', sections: [
+      { label: 'PROJE ÖZETİ', content: 'LM555 entegresi astable multivibrator modunda çalışır. Potansiyometre frekansı ayarlar, NPN transistör çıkışı yükü sürer.' },
+      { label: 'BILEŞENLER', list: ['LM555 (DIP-8)', 'NPN Transistör (TO-92)', '250k Potansiyometre', '2× 1kΩ, 1× 10kΩ direnç', '50µF Elektrolitik + 10nF kapasitör', 'SPDT toggle switch', '9V Batarya'] },
+      { label: 'FREKANS FORMÜLÜ', formula: 'f ≈ 1.44 / ((R1 + 2·R2) · C)' },
+      { label: 'PCB', content: 'EAGLE CAD ile PCB tasarımı tamamlandı. Tinkercad kütüphanesi kullanıldı.' }
+    ]},
+    en: { title: 'Oscillator Circuit', subtitle: 'LM555 ASTABLE MULTIVIBRATOR', sections: [
+      { label: 'PROJECT SUMMARY', content: 'LM555 IC operates in astable multivibrator mode. Potentiometer adjusts frequency, NPN transistor drives the load.' },
+      { label: 'COMPONENTS', list: ['LM555 (DIP-8)', 'NPN Transistor (TO-92)', '250k Potentiometer', '2× 1kΩ, 1× 10kΩ resistors', '50µF Electrolytic + 10nF capacitor', 'SPDT toggle switch', '9V Battery'] },
+      { label: 'FREQUENCY FORMULA', formula: 'f ≈ 1.44 / ((R1 + 2·R2) · C)' },
+      { label: 'PCB', content: 'PCB design completed in EAGLE CAD using Tinkercad library.' }
+    ]}
+  },
+  'proj-lasertag': {
+    path: 'projects / lasercompact',
+    tr: { title: 'LaserCompact', subtitle: 'LASER TAG SYSTEM · ALPHATECH INC.', sections: [
+      { label: 'GENEL BİLGİLER', list: ['Oyun Türü: LaserTag (Kapalı Alan)', 'Katılımcı: 2-4 oyuncu (ekstra set ile artırılabilir)', 'Geliştirici: Alp Burak ATALAY / ALPHATECH INC.'] },
+      { label: 'DONANIM', list: ['Arduino (oyuncu cihazları)', 'IR sensörler', 'RF haberleşme modülü', 'Merkezi cihaz (powerbank bağlantılı)', 'LED + ses bildirim sistemi'] },
+      { label: 'İLETİŞİM', list: ['RF (oyuncular arası)', 'Kablolu + yazılım üzerinden merkez bağlantısı'] },
+      { label: 'GÜVENLİK', warning: 'Silah göze ve kafaya doğrultulmamalı! Kullanım süresi 1 saati geçmemeli.' }
+    ]},
+    en: { title: 'LaserCompact', subtitle: 'LASER TAG SYSTEM · ALPHATECH INC.', sections: [
+      { label: 'GENERAL INFO', list: ['Game Type: LaserTag (Indoor)', 'Players: 2-4 (expandable with extra sets)', 'Developer: Alp Burak ATALAY / ALPHATECH INC.'] },
+      { label: 'HARDWARE', list: ['Arduino (player devices)', 'IR sensors', 'RF communication module', 'Central device (connected to powerbank)', 'LED + audio notification system'] },
+      { label: 'COMMUNICATION', list: ['RF (between players)', 'Wired + software link to central unit'] },
+      { label: 'SAFETY', warning: 'Never aim at eyes or head! Usage should not exceed 1 hour.' }
+    ]}
+  },
+  'proj-relaybank': {
+    path: 'projects / relaybank',
+    tr: { title: 'RelayBank', subtitle: '16 KANAL RF RÖLE KONTROLCÜsÜ', sections: [
+      { label: 'VERİCİ ARDUINO', list: ['D2–D5: Butonlar (GND\'e bağlı)', 'D6–D9: LED Binary Gösterge (220Ω direnç)', 'D12: RF Verici TX (STX882)'] },
+      { label: 'ALICI ARDUINO', list: ['D11: RF Alıcı DATA (SRX882)', 'D2–D17: 16 kanal röle modülü çıkışları'] },
+      { label: 'RF MODÜLLER', list: ['Verici: STX882', 'Alıcı: SRX882 (CS/enable pini yok, sadece DATA+VCC+GND)'] },
+      { label: 'NOT', content: 'Tüm LED\'ler için ortak katot GND\'e bağlanır. Buton\'ların diğer ucu GND\'e.' }
+    ]},
+    en: { title: 'RelayBank', subtitle: '16-CHANNEL RF RELAY CONTROLLER', sections: [
+      { label: 'TRANSMITTER ARDUINO', list: ['D2–D5: Buttons (connected to GND)', 'D6–D9: LED Binary Display (220Ω resistor)', 'D12: RF Transmitter TX (STX882)'] },
+      { label: 'RECEIVER ARDUINO', list: ['D11: RF Receiver DATA (SRX882)', 'D2–D17: 16-channel relay module outputs'] },
+      { label: 'RF MODULES', list: ['Transmitter: STX882', 'Receiver: SRX882 (no CS/enable pin, just DATA+VCC+GND)'] },
+      { label: 'NOTE', content: 'All LEDs share common cathode to GND. Button other ends to GND.' }
+    ]}
+  },
+  'proj-pedalboard': {
+    path: 'projects / pedalboard',
+    tr: { title: 'Pedalboard', subtitle: 'WAH + OD + DISTORTION + BITCRUSHER', sections: [
+      { label: 'ÖZET', content: '4 gitar pedalı projesi. Kobinsiz, entegreli, true bypass tasarımı. Gitar–amfi arası direkt bağlanır.' },
+      { label: 'ENTEGRELER', list: ['2× TL072 → Wah + Overdrive', '1× TL072 veya LM358 → Distortion', '1× LM358 → Bitcrusher', '1× NE555 → Bitcrusher clock', '1× CD4066 → Bitcrusher sample switch'] },
+      { label: 'POTANSIYOMETRELER', list: ['100k Linear → Wah sweep', '2× 500k → OD Drive, Dist Gain', '3× 100k → OD Level, Dist Volume, Crush'] },
+      { label: 'TRUE BYPASS', content: 'DPDT toggle switch ile. Kapalıyken gitar direkt amfiye gider, pedal devre dışı.' }
+    ]},
+    en: { title: 'Pedalboard', subtitle: 'WAH + OD + DISTORTION + BITCRUSHER', sections: [
+      { label: 'SUMMARY', content: '4 guitar pedal project. Inductor-free, IC-based, true bypass design. Connects directly between guitar and amp.' },
+      { label: 'ICs', list: ['2× TL072 → Wah + Overdrive', '1× TL072 or LM358 → Distortion', '1× LM358 → Bitcrusher', '1× NE555 → Bitcrusher clock', '1× CD4066 → Bitcrusher sample switch'] },
+      { label: 'POTENTIOMETERS', list: ['100k Linear → Wah sweep', '2× 500k → OD Drive, Dist Gain', '3× 100k → OD Level, Dist Volume, Crush'] },
+      { label: 'TRUE BYPASS', content: 'Via DPDT toggle switch. When off, guitar goes directly to amp, pedal bypassed.' }
+    ]}
+  },
+  // Remaining simple modals
+  buck_boost: { path: 'power / advanced / buck-boost', tr: { title: 'Buck / Boost Dönüştürücü', subtitle: 'SWITCHING CONVERTER', sections: [{ label: 'BUCK (STEP-DOWN)', content: 'Voltajı düşürür. MOSFET + Diyot + Bobin + Kondansatör.' }, { label: 'FORMÜL', formula: 'Vout = D × Vin (D = duty cycle)' }, { label: 'BOOST (STEP-UP)', content: 'Voltajı yükseltir. Bobin önce enerji depolar, serbest bırakırken yükün üstüne ekler.' }, { label: 'KRİTİK', warning: 'Duty cycle kontrolü hayati önem taşır. Overcurrent = bobin doyuma girer!' }] }, en: { title: 'Buck / Boost Converter', subtitle: 'SWITCHING CONVERTER', sections: [{ label: 'BUCK (STEP-DOWN)', content: 'Steps down voltage. MOSFET + Diode + Inductor + Capacitor.' }, { label: 'FORMULA', formula: 'Vout = D × Vin (D = duty cycle)' }, { label: 'BOOST (STEP-UP)', content: 'Steps up voltage. Inductor stores energy first, then adds it on top of the load voltage.' }, { label: 'CRITICAL', warning: 'Duty cycle control is vital. Overcurrent = inductor saturation!' }] } },
+  antenna: { path: 'rf / basic / antenna', tr: { title: 'Anten Temel Mantık', subtitle: 'ANTENNA FUNDAMENTALS', sections: [{ label: 'ANTEN NEDİR?', content: 'Elektrik sinyalini elektromanyetik dalgaya çevirir. Ya da tam tersini yapar.' }, { label: 'ÇALIŞMA', content: 'Yüksek frekanslı AC akım telden geçerken elektromanyetik alan oluşturur, bu alan uzaya dalga olarak yayılır.' }, { label: 'BOYUT', formula: 'L = λ/4 (çeyrek dalga anten)' }, { label: 'NOT', content: '2.4 GHz WiFi anteni sadece ~3.1 cm! Frekans arttıkça anten küçülür.' }] }, en: { title: 'Antenna Basics', subtitle: 'ANTEN TEMELLERİ', sections: [{ label: 'WHAT IS AN ANTENNA?', content: 'Converts electrical signals to electromagnetic waves, and vice versa.' }, { label: 'HOW IT WORKS', content: 'High-frequency AC current through a wire creates an EM field that propagates as waves through space.' }, { label: 'SIZE', formula: 'L = λ/4 (quarter-wave antenna)' }, { label: 'NOTE', content: '2.4 GHz WiFi antenna is only ~3.1 cm! Higher frequency = smaller antenna.' }] } },
+};
+
+// Fill in missing modals with a generic entry
+const genericModals = ['bjt-mos','feedback','noise','pcb-ground','binary','pullup','flipflop','timer','interrupt','debounce','signal-integrity','metastability','regulator','linear-vs-switching','gate-resistor','smps','thermal','wavelength','impedance','rf-pcb','spectrum','spi-i2c','watchdog','bare-metal','rtos','pwm-basic','multimeter','oscilloscope','rms','differential','fuse','esd','hv','isolation','buck-boost'];
+genericModals.forEach(id => {
+  if (!modals[id]) {
+    modals[id] = {
+      path: 'electrolab / ' + id,
+      tr: { title: id.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()), subtitle: id.toUpperCase(), sections: [{ label: 'BİLGİ', content: 'Bu konu için detaylı içerik yakında eklenecektir.' }] },
+      en: { title: id.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()), subtitle: id.toUpperCase(), sections: [{ label: 'INFO', content: 'Detailed content for this topic is coming soon.' }] }
+    };
+  }
+});
+
+// ═══════════════════════════════════════════════
+// MODAL FUNCTIONS
+// ═══════════════════════════════════════════════
+function openModal(id) {
+  const data = modals[id];
+  if (!data) return;
+  const lang = currentLang;
+  const d = data[lang] || data.tr;
+
+  document.getElementById('modal-path').textContent = data.path;
+
+  let html = `<div class="modal-title">${d.title}</div>
+              <div class="modal-title-en">${d.subtitle}</div>`;
+
+  d.sections.forEach(sec => {
+    html += `<div class="modal-section">
+      <div class="modal-section-label">${sec.label}</div>`;
+    if (sec.content) html += `<div class="modal-text">${sec.content}</div>`;
+    if (sec.formula) html += `<div class="formula-box">${sec.formula.replace(/\n/g,'<br>')}</div>`;
+    if (sec.list) {
+      html += `<ul class="use-list">`;
+      sec.list.forEach(item => { html += `<li>${item}</li>`; });
+      html += `</ul>`;
+    }
+    if (sec.warning) html += `<div class="warning-box">${sec.warning}</div>`;
+    html += `</div>`;
+  });
+
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalBtn();
+}
+
+function closeModalBtn() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+</script>
+</body>
+</html>
